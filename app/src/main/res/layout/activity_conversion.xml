@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.intermediate.android.bitconvo.Conversion">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginBottom="5dp">
+        <Spinner
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="55dp"
+            android:spinnerMode="dropdown"
+            android:id="@+id/spinner_coins"
+            />
+        <Spinner
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="10dp"
+            android:layout_height="55dp"
+            style="@style/Widget.AppCompat.DropDownItem.Spinner"
+            android:spinnerMode="dropdown"
+            android:id="@+id/spinner_currencies"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+        <EditText
+            android:layout_width="0dp"
+            android:background="@drawable/edit_background"
+            android:paddingLeft="4dp"
+            android:layout_weight="1"
+            android:inputType="numberDecimal"
+            android:layout_height="40dp" />
+        <EditText
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:textAlignment="viewEnd"
+            android:inputType="numberDecimal"
+            android:paddingRight="4dp"
+            android:background="@drawable/edit_background"
+            android:layout_marginLeft="10dp"
+            android:layout_height="40dp"/>
+    </LinearLayout>
+    <TextView
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="#000"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:gravity="center"
+        android:background="@drawable/text_conversion"/>
+
+
+</LinearLayout>
