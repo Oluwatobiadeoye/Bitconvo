@@ -48,6 +48,7 @@
                 android:layout_height="70dp"
                 android:spinnerMode="dropdown"
                 android:id="@+id/spinner_coins"
+                android:dropDownVerticalOffset="50dp"
                 />
         </RelativeLayout>
         <RelativeLayout
@@ -59,11 +60,13 @@
             android:layout_gravity="end"
             android:layout_marginLeft="10dp">
             <Spinner
+                android:dropDownWidth="200dp"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-                style="@style/Widget.AppCompat.DropDownItem.Spinner"
                 android:spinnerMode="dropdown"
-                android:id="@+id/spinner_currencies"/>
+                android:dropDownVerticalOffset="50dp"
+                android:id="@+id/spinner_currencies"
+                />
         </RelativeLayout>
     </LinearLayout>
     <TextView
@@ -71,6 +74,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
         android:fontFamily="sans-serif-medium"
+        android:textSize="18sp"
         android:textColor="#000"
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"

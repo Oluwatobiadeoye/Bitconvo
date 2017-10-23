@@ -18,9 +18,9 @@
         >
         <ImageView
             android:id="@+id/image"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            tools:src="@drawable/ethereum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:src="@drawable/bitcoin"
             android:layout_marginLeft="5dp"
             android:layout_gravity="center_vertical"
            />
@@ -89,7 +89,7 @@
                     tools:text="+9.18%"
                     android:fontFamily="sans-serif"
                     android:textColor="#AEB6BD"
-                    android:textSize="12sp"
+                    android:textSize="15sp"
                     />
             </LinearLayout>
         </LinearLayout>

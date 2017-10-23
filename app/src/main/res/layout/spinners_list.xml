@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/image_spinner"
+        android:src="@drawable/bitcoin"
+        android:layout_margin="10dp"/>
+
+    <TextView
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="6dp"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/image_spinner"
+        android:id="@+id/short_name_spinner"
+        android:layout_width="match_parent"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="#2B3D4D"
+        />
+    <TextView
+
+        android:layout_toRightOf="@id/image_spinner"
+        android:layout_below="@id/short_name_spinner"
+        android:id="@+id/full_name_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:textColor="#AEB6BD"
+        android:textSize="16sp"
+        android:layout_marginLeft="6dp"
+        />
+
+</RelativeLayout>

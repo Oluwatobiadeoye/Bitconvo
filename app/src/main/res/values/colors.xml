@@ -3,7 +3,11 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="background">#509E9E9E</color>
+    <color name="background">#379E9E9E</color>
     <color name="negative_value">#FF0000</color>
     <color name="positive_value">#F24CAF50</color>
+    <color name="progress1">#00BCD4</color>
+    <color name="progress2">#F28BC34A</color>
+    <color name="progress3">#E6FF9800</color>
+    <color name="progress4">#F44336</color>
 </resources>

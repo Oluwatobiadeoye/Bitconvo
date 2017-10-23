@@ -25,17 +25,21 @@
             android:exported="false" />
 
         <activity
-            android:label="Add to Watchlist"
             android:name=".ToAddCard"
-            android:parentActivityName=".MainActivity"
-            >
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value=".MainActivity"/>
+            android:label="Add to Watchlist"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
         </activity>
-        <activity android:name=".Conversion">
-
+        <activity
+            android:name=".Conversion"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
         </activity>
+        <activity android:name=".NetworkError"></activity>
     </application>
 
 </manifest>

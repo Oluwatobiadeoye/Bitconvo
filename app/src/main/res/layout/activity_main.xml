@@ -4,7 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.intermediate.android.bitconvo.MainActivity">
-
+<android.support.v4.widget.SwipeRefreshLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/swipe">
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -12,13 +15,17 @@
         android:divider="@null"
         android:dividerHeight="0dp"
         android:id="@+id/list"/>
-
+</android.support.v4.widget.SwipeRefreshLayout>
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
+        android:src="@drawable/ic_add"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_margin="15dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="25dp"
         />
 </RelativeLayout>
