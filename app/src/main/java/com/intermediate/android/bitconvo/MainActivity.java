@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 startActivity(intent);
             }
         });
-        
+
 
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
