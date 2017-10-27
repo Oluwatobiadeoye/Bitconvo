@@ -72,119 +72,146 @@ public class Conversion extends AppCompatActivity implements LoaderManager.Loade
         mCurrencyAdapter = new SpinnerAdapter(this,R.layout.spinners_list,currencySpinnerItems);
         spinnerCoins.setAdapter(mCoinAdapter);
         spinner_currencies.setAdapter(mCurrencyAdapter);
-
         setUpSpinners();
-
-        if (currentRateUri != null) {
-            getSupportLoaderManager().initLoader(2, null, this);
-        }
+        getSupportLoaderManager().initLoader(2, null, this);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        String[] projection =  {WatchlistEntry._ID,
+        CursorLoader data;
+        String[] projection1 =  {WatchlistEntry._ID,
                 WatchlistEntry.RATE_FOREX_NAME,
                 WatchlistEntry.VALUE,
-                };
 
-        return new CursorLoader(this,
-                currentRateUri,
-                projection,
-                null,
-                null,
-                null);
+                };
+        String[] projection2 = {
+                CurrencyEntry._ID,
+                CurrencyEntry.CURR_BTC_VAL
+        };
+if(currentRateUri != null) {
+     data = new CursorLoader(this,
+            currentRateUri,
+            projection1,
+            null,
+            null,
+            null);
+} else {
+    data = new CursorLoader(this,
+            CurrencyEntry.CONTENT_URI,
+            projection2,
+            null,
+            null,
+            null);
+}
+        return data;
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-       if (data.moveToNext()) {
-           String coinName;
-           String currencyName;
-           int forexNameIndex = data.getColumnIndex(WatchlistEntry.RATE_FOREX_NAME);
-           int valueIndex = data.getColumnIndex(WatchlistEntry.VALUE);
+        String coinName;
+        String currencyName;
+        int valueIndex;
+        if (data.moveToNext() && currentRateUri != null) {
+            int forexNameIndex = data.getColumnIndex(WatchlistEntry.RATE_FOREX_NAME);
+            valueIndex = data.getColumnIndex(WatchlistEntry.VALUE);
 
-           forexName = data.getString(forexNameIndex);
-           String[] parts = forexName.split(" / ", 2);
-           coinName = parts[0];
-           currencyName = parts[1];
+            forexName = data.getString(forexNameIndex);
+            String[] parts = forexName.split(" / ", 2);
+            coinName = parts[0];
+            currencyName = parts[1];
 
-           switch (coinName) {
-               case "BTC":
-                   spinnerCoins.setSelection(0);
-                   break;
-               case "ETH":
-                   spinnerCoins.setSelection(1);
-           }
-           switch (currencyName) {
-               case "USD":
-                   spinner_currencies.setSelection(0);
-                   break;
-               case "EUR":
-                   spinner_currencies.setSelection(1);
-                   break;
-               case "JPY":
-                   spinner_currencies.setSelection(2);
-                   break;
-               case "GBP":
-                   spinner_currencies.setSelection(3);
-                   break;
-               case "CHF":
-                   spinner_currencies.setSelection(4);
-                   break;
-               case "CAD":
-                   spinner_currencies.setSelection(5);
-                   break;
-               case "AUD":
-                   spinner_currencies.setSelection(6);
-                   break;
-               case "ZAR":
-                   spinner_currencies.setSelection(7);
-                   break;
-               case "INR":
-                   spinner_currencies.setSelection(8);
-                   break;
-               case "IRR":
-                   spinner_currencies.setSelection(9);
-                   break;
-               case "HKD":
-                   spinner_currencies.setSelection(10);
-                   break;
-               case "JMD":
-                   spinner_currencies.setSelection(11);
-                   break;
-               case "KWD":
-                   spinner_currencies.setSelection(12);
-                   break;
-               case "MYR":
-                   spinner_currencies.setSelection(13);
-                   break;
-               case "NGN":
-                   spinner_currencies.setSelection(14);
-                   break;
-               case "QAR":
-                   spinner_currencies.setSelection(15);
-                   break;
-               case "RUB":
-                   spinner_currencies.setSelection(16);
-                   break;
-               case "SAR":
-                   spinner_currencies.setSelection(17);
-                   break;
-               case "KRW":
-                   spinner_currencies.setSelection(18);
-                   break;
-               case "GHS":
-                   spinner_currencies.setSelection(19);
-                   break;
-           }
-           exchangeString = data.getString(valueIndex);
-           parts = exchangeString.split(" ", 2);
-           valueForCurrency = parts[1];
-           coinEditText.setText("1");
-           currencyEditText.setText(valueForCurrency);
-           textView.setText(1 + " " + coinName + " = " + valueForCurrency + " " + currencyName);
-       }
+            switch (coinName) {
+                case "BTC":
+                    spinnerCoins.setSelection(0);
+                    break;
+                case "ETH":
+                    spinnerCoins.setSelection(1);
+            }
+            switch (currencyName) {
+                case "USD":
+                    spinner_currencies.setSelection(0);
+                    break;
+                case "EUR":
+                    spinner_currencies.setSelection(1);
+                    break;
+                case "JPY":
+                    spinner_currencies.setSelection(2);
+                    break;
+                case "GBP":
+                    spinner_currencies.setSelection(3);
+                    break;
+                case "CHF":
+                    spinner_currencies.setSelection(4);
+                    break;
+                case "CAD":
+                    spinner_currencies.setSelection(5);
+                    break;
+                case "AUD":
+                    spinner_currencies.setSelection(6);
+                    break;
+                case "ZAR":
+                    spinner_currencies.setSelection(7);
+                    break;
+                case "INR":
+                    spinner_currencies.setSelection(8);
+                    break;
+                case "IRR":
+                    spinner_currencies.setSelection(9);
+                    break;
+                case "HKD":
+                    spinner_currencies.setSelection(10);
+                    break;
+                case "JMD":
+                    spinner_currencies.setSelection(11);
+                    break;
+                case "KWD":
+                    spinner_currencies.setSelection(12);
+                    break;
+                case "MYR":
+                    spinner_currencies.setSelection(13);
+                    break;
+                case "NGN":
+                    spinner_currencies.setSelection(14);
+                    break;
+                case "QAR":
+                    spinner_currencies.setSelection(15);
+                    break;
+                case "RUB":
+                    spinner_currencies.setSelection(16);
+                    break;
+                case "SAR":
+                    spinner_currencies.setSelection(17);
+                    break;
+                case "KRW":
+                    spinner_currencies.setSelection(18);
+                    break;
+                case "GHS":
+                    spinner_currencies.setSelection(19);
+                    break;
+            }
+            exchangeString = data.getString(valueIndex);
+            parts = exchangeString.split(" ", 2);
+            valueForCurrency = parts[1];
+            coinEditText.setText("1");
+            currencyEditText.setText(valueForCurrency);
+            textView.setText(1 + " " + coinName + " = " + valueForCurrency + " " + currencyName);
+        }
+        else if (data.moveToNext() && currentRateUri == null){
+            valueIndex = data.getColumnIndex(CurrencyEntry.CURR_BTC_VAL);
+            spinnerCoins.setSelection(0);
+            spinner_currencies.setSelection(0);
+            exchangeString = data.getString(valueIndex);
+            parts = exchangeString.split(" ", 2);
+            valueForCurrency = parts[1];
+            coinEditText.setText("1");
+            currencyEditText.setText(valueForCurrency);
+            coinName = "BTC";
+            currencyName = "USD";
+            textView.setText(1 + " " + coinName + " = " + valueForCurrency + " " + currencyName);
+        }
     }
+
+
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
@@ -201,8 +228,10 @@ public class Conversion extends AppCompatActivity implements LoaderManager.Loade
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 currentCoinSpinnerItem = (SpinnerItem) parent.getItemAtPosition(position);
                 coinForexName = currentCoinSpinnerItem.getShortName();
-                mFromValue =  numberParse(coinEditText.getText().toString()).doubleValue();
-
+                if (TextUtils.isEmpty(coinEditText.getText().toString())) {
+                    mFromValue = 1;
+                }
+                else  {  mFromValue =  numberParse(coinEditText.getText().toString()).doubleValue();}
                 int currencyPosition = spinner_currencies.getSelectedItemPosition();
                 cursor.moveToPosition(currencyPosition);
                 switch (position){
@@ -234,7 +263,10 @@ public class Conversion extends AppCompatActivity implements LoaderManager.Loade
         spinner_currencies.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mFromValue = numberParse(coinEditText.getText().toString()).doubleValue();
+                if (TextUtils.isEmpty(coinEditText.getText().toString())) {
+                    mFromValue = 1;
+                }
+                else  {  mFromValue =  numberParse(coinEditText.getText().toString()).doubleValue();}
                 cursor.moveToPosition(position);
                 switch (spinnerCoins.getSelectedItemPosition()){
                     case 0:
@@ -298,6 +330,7 @@ public class Conversion extends AppCompatActivity implements LoaderManager.Loade
                         convertedValue = convertToCurrency(mFromValue,constant);
                         formattedCoin = numberFormat(mFromValue);
                         formattedCurrency = numberFormat(convertedValue);
+                        coinEditText.setText(formattedCoin);
                         currencyEditText.setText(formattedCurrency);
                         textView.setText(formattedCoin + " " + coinForexName + " = " + formattedCurrency + " "  + currencyForexName);
                 }
@@ -352,7 +385,9 @@ public class Conversion extends AppCompatActivity implements LoaderManager.Loade
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                closeCursor();
                 NavUtils.navigateUpFromSameTask(this);
+                finish();
                 return true;
             case R.id.delete:
                 removeFromWatchList();
@@ -415,6 +450,7 @@ public class Conversion extends AppCompatActivity implements LoaderManager.Loade
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         getContentResolver().delete(currentRateUri,null,null);
+                        closeCursor();
                         finish();
                     }
                 })
@@ -429,26 +465,26 @@ public class Conversion extends AppCompatActivity implements LoaderManager.Loade
     }
     public ArrayList<SpinnerItem> getCurrencySpinnerList() {
         ArrayList<SpinnerItem> spinnerItems = new ArrayList<>();
-        spinnerItems.add(new SpinnerItem("USD","United States Dollar",R.drawable.bitcoin));
-        spinnerItems.add(new SpinnerItem("EUR" ,"European Euro",R.drawable.ethereum));
-        spinnerItems.add(new SpinnerItem("JPY","Japanese Yen",R.drawable.ethereum));
-        spinnerItems.add(new SpinnerItem("GBP", "Great British Pound",R.drawable.ethereum));
-        spinnerItems.add(new SpinnerItem("CHF", "Swiss Franc",R.drawable.ethereum));
-        spinnerItems.add(new SpinnerItem("CAD", "Canadian Dollar",R.drawable.bitcoin));
-        spinnerItems.add(new SpinnerItem("AUD", "Australian Dollar",R.drawable.bitcoin));
-        spinnerItems.add(new SpinnerItem("ZAR", "South African Dollar",R.drawable.bitcoin));
-        spinnerItems.add(new SpinnerItem("INR", "Indian Rupee",R.drawable.ethereum));
-        spinnerItems.add(new SpinnerItem("IRR", "Iranian Rial",R.drawable.ethereum));
-        spinnerItems.add(new SpinnerItem("HKD", "Hong Kong Dollar",R.drawable.ethereum));
-        spinnerItems.add(new SpinnerItem("JMD", "Jamaican dollar",R.drawable.bitcoin));
-        spinnerItems.add(new SpinnerItem("KWD", "Kuwaiti Dinar",R.drawable.bitcoin));
-        spinnerItems.add(new SpinnerItem("MYR", "Malaysian Ringgit",R.drawable.bitcoin));
-        spinnerItems.add(new SpinnerItem("NGN", "Nigerian Naira",R.drawable.bitcoin));
-        spinnerItems.add(new SpinnerItem("QAR", "Qatari Rial",R.drawable.bitcoin));
-        spinnerItems.add(new SpinnerItem("RUB", "Russian Rubble",R.drawable.bitcoin));
-        spinnerItems.add(new SpinnerItem("SAR", "Saudi Riyal",R.drawable.bitcoin));
-        spinnerItems.add(new SpinnerItem("KRW", "South Korea Won",R.drawable.ethereum));
-        spinnerItems.add(new SpinnerItem("GHS", "Ghanian Cedi",R.drawable.ethereum));
+        spinnerItems.add(new SpinnerItem("USD","United States Dollar",R.drawable.usa));
+        spinnerItems.add(new SpinnerItem("EUR" ,"European Euro",R.drawable.euro));
+        spinnerItems.add(new SpinnerItem("JPY","Japanese Yen",R.drawable.japan));
+        spinnerItems.add(new SpinnerItem("GBP", "Great British Pound",R.drawable.england));
+        spinnerItems.add(new SpinnerItem("CHF", "Swiss Franc",R.drawable.switzerland));
+        spinnerItems.add(new SpinnerItem("CAD", "Canadian Dollar",R.drawable.canada));
+        spinnerItems.add(new SpinnerItem("AUD", "Australian Dollar",R.drawable.australia));
+        spinnerItems.add(new SpinnerItem("ZAR", "South African Dollar",R.drawable.southafrica));
+        spinnerItems.add(new SpinnerItem("INR", "Indian Rupee",R.drawable.india));
+        spinnerItems.add(new SpinnerItem("IRR", "Iranian Rial",R.drawable.iran));
+        spinnerItems.add(new SpinnerItem("HKD", "Hong Kong Dollar",R.drawable.honkong));
+        spinnerItems.add(new SpinnerItem("JMD", "Jamaican dollar",R.drawable.jamaica));
+        spinnerItems.add(new SpinnerItem("KWD", "Kuwaiti Dinar",R.drawable.kuwait));
+        spinnerItems.add(new SpinnerItem("MYR", "Malaysian Ringgit",R.drawable.malaysia));
+        spinnerItems.add(new SpinnerItem("NGN", "Nigerian Naira",R.drawable.nigeria));
+        spinnerItems.add(new SpinnerItem("QAR", "Qatari Rial",R.drawable.qatar));
+        spinnerItems.add(new SpinnerItem("RUB", "Russian Rubble",R.drawable.russia));
+        spinnerItems.add(new SpinnerItem("SAR", "Saudi Riyal",R.drawable.saudi));
+        spinnerItems.add(new SpinnerItem("KRW", "South Korea Won",R.drawable.saudi));
+        spinnerItems.add(new SpinnerItem("GHS", "Ghanian Cedi",R.drawable.ghana));
         return spinnerItems;
     }
     public ArrayList<SpinnerItem> getCoinSpinnerList() {
@@ -456,5 +492,11 @@ public class Conversion extends AppCompatActivity implements LoaderManager.Loade
         spinnerItems.add(new SpinnerItem("BTC","Bitcoin",R.drawable.bitcoin));
         spinnerItems.add(new SpinnerItem("ETH" ,"Ethereum",R.drawable.ethereum));
         return spinnerItems;
+    }
+
+    private void closeCursor(){
+        if (cursor!= null ) {
+            cursor.close();
+        }
     }
 }

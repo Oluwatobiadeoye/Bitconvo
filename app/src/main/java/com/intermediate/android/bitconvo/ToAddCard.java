@@ -227,26 +227,26 @@ public class ToAddCard extends AppCompatActivity {
 
     public ArrayList<SpinnerItem> getCurrencySpinnerList() {
         ArrayList<SpinnerItem> spinnerItems = new ArrayList<>();
-        spinnerItems.add(new SpinnerItem("USD","United States Dollar",R.drawable.bitcoin));
-        spinnerItems.add(new SpinnerItem("EUR" ,"European Euro",R.drawable.ethereum));
-        spinnerItems.add(new SpinnerItem("JPY","Japanese Yen",R.drawable.ethereum));
-        spinnerItems.add(new SpinnerItem("GBP", "Great British Pound",R.drawable.ethereum));
-        spinnerItems.add(new SpinnerItem("CHF", "Swiss Franc",R.drawable.ethereum));
-        spinnerItems.add(new SpinnerItem("CAD", "Canadian Dollar",R.drawable.bitcoin));
-        spinnerItems.add(new SpinnerItem("AUD", "Australian Dollar",R.drawable.bitcoin));
-        spinnerItems.add(new SpinnerItem("ZAR", "South African Dollar",R.drawable.bitcoin));
-        spinnerItems.add(new SpinnerItem("INR", "Indian Rupee",R.drawable.ethereum));
-        spinnerItems.add(new SpinnerItem("IRR", "Iranian Rial",R.drawable.ethereum));
-        spinnerItems.add(new SpinnerItem("HKD", "Hong Kong Dollar",R.drawable.ethereum));
-        spinnerItems.add(new SpinnerItem("JMD", "Jamaican dollar",R.drawable.bitcoin));
-        spinnerItems.add(new SpinnerItem("KWD", "Kuwaiti Dinar",R.drawable.bitcoin));
-        spinnerItems.add(new SpinnerItem("MYR", "Malaysian Ringgit",R.drawable.bitcoin));
-        spinnerItems.add(new SpinnerItem("NGN", "Nigerian Naira",R.drawable.bitcoin));
-        spinnerItems.add(new SpinnerItem("QAR", "Qatari Rial",R.drawable.bitcoin));
-        spinnerItems.add(new SpinnerItem("RUB", "Russian Rubble",R.drawable.bitcoin));
-        spinnerItems.add(new SpinnerItem("SAR", "Saudi Riyal",R.drawable.bitcoin));
-        spinnerItems.add(new SpinnerItem("KRW", "South Korea Won",R.drawable.ethereum));
-        spinnerItems.add(new SpinnerItem("GHS", "Ghanian Cedi",R.drawable.ethereum));
+        spinnerItems.add(new SpinnerItem("USD","United States Dollar",R.drawable.usa));
+        spinnerItems.add(new SpinnerItem("EUR" ,"European Euro",R.drawable.euro));
+        spinnerItems.add(new SpinnerItem("JPY","Japanese Yen",R.drawable.japan));
+        spinnerItems.add(new SpinnerItem("GBP", "Great British Pound",R.drawable.england));
+        spinnerItems.add(new SpinnerItem("CHF", "Swiss Franc",R.drawable.switzerland));
+        spinnerItems.add(new SpinnerItem("CAD", "Canadian Dollar",R.drawable.canada));
+        spinnerItems.add(new SpinnerItem("AUD", "Australian Dollar",R.drawable.australia));
+        spinnerItems.add(new SpinnerItem("ZAR", "South African Dollar",R.drawable.southafrica));
+        spinnerItems.add(new SpinnerItem("INR", "Indian Rupee",R.drawable.india));
+        spinnerItems.add(new SpinnerItem("IRR", "Iranian Rial",R.drawable.iran));
+        spinnerItems.add(new SpinnerItem("HKD", "Hong Kong Dollar",R.drawable.honkong));
+        spinnerItems.add(new SpinnerItem("JMD", "Jamaican dollar",R.drawable.jamaica));
+        spinnerItems.add(new SpinnerItem("KWD", "Kuwaiti Dinar",R.drawable.kuwait));
+        spinnerItems.add(new SpinnerItem("MYR", "Malaysian Ringgit",R.drawable.malaysia));
+        spinnerItems.add(new SpinnerItem("NGN", "Nigerian Naira",R.drawable.nigeria));
+        spinnerItems.add(new SpinnerItem("QAR", "Qatari Rial",R.drawable.qatar));
+        spinnerItems.add(new SpinnerItem("RUB", "Russian Rubble",R.drawable.russia));
+        spinnerItems.add(new SpinnerItem("SAR", "Saudi Riyal",R.drawable.saudi));
+        spinnerItems.add(new SpinnerItem("KRW", "South Korea Won",R.drawable.saudi));
+        spinnerItems.add(new SpinnerItem("GHS", "Ghanian Cedi",R.drawable.ghana));
         return spinnerItems;
     }
     public ArrayList<SpinnerItem> getCoinSpinnerList() {

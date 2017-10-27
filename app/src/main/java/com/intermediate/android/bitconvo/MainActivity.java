@@ -14,20 +14,21 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+import com.android.volley.*;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.intermediate.android.bitconvo.data.CurrencyContract;
+
 import com.intermediate.android.bitconvo.data.CurrencyContract.*;
 
 import org.json.JSONException;
@@ -48,15 +49,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         private String[] partNames,projection1,projection2;
         private Uri currentRateUri;
         private long currentRateId;
+        private View emptyView;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.refresh_rate:
+                 swipeRefreshLayout.setRefreshing(true);
                  updateData();
                 return true;
             case R.id.delete_all:
-                deleteAll();
+                showDialog();
                 return true;
             case R.id.convert:
                 Intent intent = new Intent(MainActivity.this, Conversion.class);
@@ -74,11 +77,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         mAdapter  = new RateCursorAdapter(this,null);
         ListView listView = (ListView) findViewById(R.id.list);
+        emptyView = findViewById(R.id.empty_view);
+        ImageView imageView = (ImageView) findViewById(R.id.plus_sign);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe);
         swipeRefreshLayout.setColorSchemeResources(
                 R.color.progress1,
@@ -96,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         putCurrencyNames();
         checkFirstRun();
         getSupportLoaderManager().initLoader(1,null,this);
+        listView.setEmptyView(emptyView);
         listView.setAdapter(mAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -108,31 +116,37 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         });
 
-        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-                if (scrollState == SCROLL_STATE_TOUCH_SCROLL) {
-                    fab.animate().cancel();
-                    fab.setVisibility(View.INVISIBLE);
-                } else {
-                    fab.animate().cancel();
-                    fab.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-            }
-        });
-
-        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent (MainActivity.this,ToAddCard.class);
                 startActivity(intent);
+            }
+        });
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent (MainActivity.this,ToAddCard.class);
+                startActivity(intent);
+            }
+        });
+        
+
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+               if (scrollState == SCROLL_STATE_TOUCH_SCROLL) {
+                    fab.animate().cancel();
+                   fab.setVisibility(View.INVISIBLE);
+               } else {
+                 fab.setVisibility(View.VISIBLE);
+               }
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
             }
         });
     }
@@ -147,14 +161,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                             JSONObject display = response.getJSONObject("DISPLAY");
                             ContentValues values = new ContentValues();
                             for (int i =0; i < currencyNames.size(); i++) {
-                                String btc = "BTC";
-                                String eth = "ETH";
                                 currentCurrencyName = currencyNames.get(i);
                                 partNames = currentCurrencyName.split(" ",2);
                                 currencyForexName = partNames[0];
                                 fullName = partNames[1];
-                                JSONObject btcObject = display.getJSONObject(btc);
-                                JSONObject ethObject = display.getJSONObject(eth);
+                                JSONObject btcObject = display.getJSONObject("BTC");
+                                JSONObject ethObject = display.getJSONObject("ETH");
                                 JSONObject btcCurrencyObject = btcObject.getJSONObject(currencyForexName);
                                 btcCurrencyValue = btcCurrencyObject.getString("PRICE");
                                 btcPer = btcCurrencyObject.getString("CHANGEPCT24HOUR");
@@ -169,6 +181,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                                 values.put(CurrencyEntry.CURR_ETH_PER,ethPer);
                                 getContentResolver().insert(CurrencyEntry.CONTENT_URI,values);
                             }
+                            fab.setVisibility(View.VISIBLE);
+                            getSharedPreferences("PREFERENCE",MODE_PRIVATE)
+                                    .edit()
+                                    .putBoolean("isFirstRun",false).apply();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -177,7 +193,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                if (emptyView !=null) {
+                    emptyView.setVisibility(View.GONE);
+                }
+                    Intent intent = new Intent(MainActivity.this, NetworkProblem.class);
+                    startActivity(intent);
+                    finish();
             }
         });
         NetworkRequest.getInstance(getApplicationContext()).addToRequestQueue(requestCurrencyValues);
@@ -210,9 +231,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         boolean isFirstRun = getSharedPreferences("PREFERENCE",MODE_PRIVATE).getBoolean("isFirstRun",true);
         if (isFirstRun) {
             makeNetworkRequest();
-            getSharedPreferences("PREFERENCE",MODE_PRIVATE)
-                    .edit()
-                    .putBoolean("isFirstRun",false).apply();
         } else {
             updateData();
         }
@@ -235,8 +253,42 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 null
                 );
     }
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mAdapter.swapCursor(data);
+    }
 
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mAdapter.swapCursor(null);
+    }
+
+    private  void deleteAll() {
+        getContentResolver().delete(WatchlistEntry.CONTENT_URI,null,null);
+    }
+
+    private void showDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Confirm remove?")
+                .setPositiveButton("Remove", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteAll();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
     private void updateData() {
+        if (fab.getVisibility() == View.INVISIBLE) {
+            fab.setVisibility(View.VISIBLE);
+        }
         JsonObjectRequest requestUpdatedValues = new JsonObjectRequest(Request.Method.GET, CRYPTO_REQUEST_URL, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -303,40 +355,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             @Override
             public void onErrorResponse(VolleyError error) {
                 swipeRefreshLayout.setRefreshing(false);
+                String message;
+                if (error instanceof TimeoutError || error instanceof AuthFailureError) {
+                    message = "Connect to the Internet to get latest values";
+                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                } else if (error instanceof ServerError) {
+                    message = "The server could not be found.Please try again after some time!!";
+                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                } else if (error instanceof ParseError) {
+                    message = "Parsing error! Please try again after some time!!";
+                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                }
             }
         });
         NetworkRequest.getInstance(getApplicationContext()).addToRequestQueue(requestUpdatedValues);
-    }
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mAdapter.swapCursor(data);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        mAdapter.swapCursor(null);
-    }
-
-    private  void deleteAll() {
-        getContentResolver().delete(WatchlistEntry.CONTENT_URI,null,null);
-    }
-
-    private void showDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Confirm remove?")
-                .setPositiveButton("Remove", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        deleteAll();
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog dialog = builder.create();
-        dialog.show();
     }
 }

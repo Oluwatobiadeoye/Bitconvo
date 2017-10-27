@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Bitconvo</string>
+    <string name="app_name">BitConvo</string>
     <string name="alert_message">Remove current pair from watchlist?</string>
     <string name="remove">Remove</string>
     <string name="cancel">Cancel</string>
