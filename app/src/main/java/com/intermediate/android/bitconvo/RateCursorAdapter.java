@@ -36,7 +36,7 @@ public class RateCursorAdapter extends CursorAdapter {
 
         ImageView imageView = (ImageView) view.findViewById(R.id.image);
         TextView forexNameView = (TextView) view.findViewById(R.id.forex_name);
-        TextView fullNameView = (TextView) view.findViewById(R.id.full_name);
+        TextView fullNameView = (TextView)  view.findViewById(R.id.full_name);
         TextView valueView = (TextView) view.findViewById(R.id.value);
         TextView percentView = (TextView) view.findViewById(R.id.percent);
 
