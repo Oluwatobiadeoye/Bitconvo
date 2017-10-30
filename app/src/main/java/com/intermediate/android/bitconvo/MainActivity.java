@@ -351,6 +351,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
                                 valuesWatch.put(WatchlistEntry.VALUE,updatedValue);
                                 valuesWatch.put(WatchlistEntry.PERCENTAGE,updatedPercentage);
+
                                 getContentResolver().update(currentRateUri,valuesWatch,null,null);
                             }
                             cursor.close();

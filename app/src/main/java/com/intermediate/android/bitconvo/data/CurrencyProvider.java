@@ -88,7 +88,6 @@ public class CurrencyProvider extends ContentProvider {
 
     // insert data to the database
     // returns the uri of the inserted row
-    @Nullable
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         int match = sUriMatcher.match(uri);
@@ -155,15 +154,6 @@ public class CurrencyProvider extends ContentProvider {
     // Exact method which inserts to the database
     public Uri insertCurrency(Uri uri, ContentValues values) {
         determineTableName(uri);
-        String btcPer = values.getAsString(CurrencyEntry.CURR_BTC_PER);
-        if (btcPer == null) {
-           values.put(CurrencyEntry.CURR_BTC_PER,"%");
-        }
-
-        String ethPer = values.getAsString(CurrencyEntry.CURR_ETH_PER);
-        if (ethPer == null) {
-            values.put(CurrencyEntry.CURR_ETH_PER,"%");
-        }
         SQLiteDatabase database = mCurrencyDbHelper.getWritableDatabase();
         long id = database.insert(TABlENAME,null,values);
         if (id == -1){
@@ -176,14 +166,7 @@ public class CurrencyProvider extends ContentProvider {
     public int updateCurrency(Uri uri,ContentValues values,String selection, String[] selectionArgs) {
         determineTableName(uri);
         String btcPer = values.getAsString(CurrencyEntry.CURR_BTC_PER);
-        if (btcPer == null) {
-            values.put(CurrencyEntry.CURR_BTC_PER,"%");
-        }
 
-        String ethPer = values.getAsString(CurrencyEntry.CURR_ETH_PER);
-        if (ethPer == null) {
-            values.put(CurrencyEntry.CURR_ETH_PER,"%");
-        }
         SQLiteDatabase database = mCurrencyDbHelper.getWritableDatabase();
         int rowsUpdated = database.update(TABlENAME,values,selection,selectionArgs);
         getContext().getContentResolver().notifyChange(uri,null);
