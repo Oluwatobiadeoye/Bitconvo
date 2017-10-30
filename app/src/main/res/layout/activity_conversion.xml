@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/background"
-    tools:context="com.intermediate.android.bitconvo.Conversion">
+    tools:context=".ConversionActivity">
     <android.support.v7.widget.CardView
         xmlns:card_view = "http://schemas.android.com/apk/res-auto"
         android:layout_margin="10dp"
@@ -30,7 +30,8 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="55dp"
-            android:paddingRight="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
             android:spinnerMode="dropdown"
             android:dropDownVerticalOffset="50dp"
             android:id="@+id/spinner_coins"
@@ -39,7 +40,8 @@
             android:dropDownWidth="200dp"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:paddingRight="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
             android:layout_height="55dp"
             android:spinnerMode="dropdown"
             android:dropDownVerticalOffset="50dp"
@@ -57,7 +59,8 @@
             android:imeOptions="actionDone"
             android:layout_width="0dp"
             android:background="@drawable/edit_background"
-            android:paddingLeft="4dp"
+            android:paddingEnd="4dp"
+            android:paddingStart="4dp"
             android:layout_weight="1"
             android:textCursorDrawable="@null"
             android:inputType="numberDecimal"
@@ -70,9 +73,10 @@
             android:layout_weight="1"
             android:textAlignment="viewEnd"
             android:inputType="numberDecimal"
-            android:paddingRight="4dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
             android:background="@drawable/edit_background"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:layout_height="40dp"/>
     </LinearLayout>
     <TextView

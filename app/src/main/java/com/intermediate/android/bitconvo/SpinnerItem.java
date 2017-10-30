@@ -2,6 +2,7 @@ package com.intermediate.android.bitconvo;
 
 /**
  * Created by adeoye oluwatobi on 10/21/2017.
+ * Custom Spinner item with images and texts.
  */
 public class SpinnerItem {
     private String shortName, fullName;

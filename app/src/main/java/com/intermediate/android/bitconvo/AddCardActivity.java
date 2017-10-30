@@ -3,7 +3,6 @@ package com.intermediate.android.bitconvo;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -12,28 +11,27 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.intermediate.android.bitconvo.data.CurrencyContract.*;
-import com.intermediate.android.bitconvo.data.CurrencyDbHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ToAddCard extends AppCompatActivity {
+public class AddCardActivity extends AppCompatActivity {
 
     private String coinValue,currencyValue,tableCurrencyValue,currencyForexName,coinForexName,lastPart,coinFullName,currencyFullName,percentage;
-    private Cursor data;
-    private String[] parts;
-    private Spinner spinnerCoins,spinner_currencies;
-    private TextView exchangeRate;
     private List<SpinnerItem> coinSpinnerItems,currencySpinnerItems;
     private SpinnerAdapter mCoinAdapter,mCurrencyAdapter;
-    private SpinnerItem currentCoinSpinnerItem,currentCurrencySpinnerItem;
+    private Spinner spinnerCoins,spinner_currencies;
+    private SpinnerItem currentCoinSpinnerItem;
+    private TextView exchangeRate;
+    private String[] parts;
+    private Cursor data;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +90,7 @@ public class ToAddCard extends AppCompatActivity {
                 parts =  tableCurrencyValue.split(" ",2);
                 lastPart = parts[1];
                 currencyValue = lastPart + " " + currencyForexName;
-                exchangeRate.setText(coinValue+ " = " + currencyValue);
+                exchangeRate.setText(String.format("%s = %s",coinValue,currencyValue));
             }
 
             @Override
@@ -120,7 +118,7 @@ public class ToAddCard extends AppCompatActivity {
                 parts =  tableCurrencyValue.split(" ",2);
                 lastPart = parts[1];
                 currencyValue = lastPart + " " + currencyForexName;
-                exchangeRate.setText(coinValue+ " = " + currencyValue);
+                exchangeRate.setText(String.format("%s = %s",coinValue,currencyValue));
             }
 
             @Override
@@ -168,32 +166,31 @@ public class ToAddCard extends AppCompatActivity {
                         break;
                     }
                 }
-
                     if (!findMatch) {
                         inserted = getContentResolver().insert(WatchlistEntry.CONTENT_URI, values);
                         if (inserted != null) {
-                            ToAddCard.this.finish();
+                            AddCardActivity.this.finish();
                             closeCursor(cursor);
                             closeCursor(data);
                         } else {
-                            Toast.makeText(ToAddCard.this, "Unsuccessful", Toast.LENGTH_SHORT).show();
-                            ToAddCard.this.finish();
+                            Toast.makeText(AddCardActivity.this, "Unsuccessful", Toast.LENGTH_SHORT).show();
+                            AddCardActivity.this.finish();
                             closeCursor(cursor);
                             closeCursor(data);
                         }
                     } else {
-                        Toast.makeText(ToAddCard.this, "Pair already in Watchlist", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddCardActivity.this, "Pair already in Watchlist", Toast.LENGTH_SHORT).show();
                     }
 
             } else {
                 inserted = getContentResolver().insert(WatchlistEntry.CONTENT_URI, values);
                 if (inserted != null) {
-                    ToAddCard.this.finish();
+                    AddCardActivity.this.finish();
                     closeCursor(cursor);
                     closeCursor(data);
                 } else {
-                    Toast.makeText(ToAddCard.this, "Unsuccessful", Toast.LENGTH_SHORT).show();
-                    ToAddCard.this.finish();
+                    Toast.makeText(AddCardActivity.this, "Unsuccessful", Toast.LENGTH_SHORT).show();
+                    AddCardActivity.this.finish();
                     closeCursor(cursor);
                     closeCursor(data);
                 }

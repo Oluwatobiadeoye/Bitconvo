@@ -8,11 +8,13 @@ import com.intermediate.android.bitconvo.data.CurrencyContract.WatchlistEntry;
 
 /**
  * Created by adeoye oluwatobi on 10/13/2017.
+ * This class creates an SQLite database "bitconvo" with two tables: currencies and watchlist
  */
 public class CurrencyDbHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "bitconvo.db";
     private static final int DATABASE_VERSION= 1;
 
+    // SQL statement to create table "currencies"
     private final String SQL_CREATE_CURRENCY_TABLE = "CREATE TABLE " + CurrencyEntry.TABLE_NAME + "(" +
     CurrencyEntry.CURR_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
     CurrencyEntry.CURR_FOREX_NAME + " TEXT, " +
@@ -22,6 +24,7 @@ public class CurrencyDbHelper extends SQLiteOpenHelper {
     CurrencyEntry.CURR_BTC_PER + " TEXT, "+
     CurrencyEntry.CURR_ETH_PER + " TEXT);";
 
+    // SQL statement to create table "watchlist"
     private final String SQL_CREATE_WATCHLIST = "CREATE TABLE " + WatchlistEntry.TABLE_NAME + "(" +
             WatchlistEntry.WATCH_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             WatchlistEntry.RATE_FOREX_NAME + " TEXT, " +

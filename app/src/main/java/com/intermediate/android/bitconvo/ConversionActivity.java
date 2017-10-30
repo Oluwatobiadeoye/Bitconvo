@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,28 +32,31 @@ import java.util.List;
 import java.util.Locale;
 import java.text.NumberFormat;
 
-public class Conversion extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
-
-    private Uri currentRateUri;
-    private Spinner spinnerCoins,spinner_currencies;
-    private Cursor cursor;
-    private TextView textView;
-    private EditText coinEditText,currencyEditText;
-    private double mFromValue,constant,convertedValue;
-    private String[] parts;
-    private String exchangeString,valueForCurrency,currencyForexName,coinForexName,constantStringValue,formattedCoin,formattedCurrency,forexName;
+public class ConversionActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+    private String exchangeString,valueForCurrency,currencyForexName,coinForexName,constantStringValue, formattedCoinValue, formattedCurrencyValue,forexName;
     private List<SpinnerItem> coinSpinnerItems,currencySpinnerItems;
-    private SpinnerItem currentCoinSpinnerItem;
+    private int btcValueIndex,forexNameIndex,ethValueIndex;
     private SpinnerAdapter mCoinAdapter,mCurrencyAdapter;
+    private double fromValue,constant,convertedValue;
+    private Spinner spinnerCoins,spinnerCurrencies;
+    private EditText coinEditText,currencyEditText;
+    private SpinnerItem currentCoinSpinnerItem;
+    private Uri currentRateUri;
+    private TextView textView;
+    private String[] parts;
+    private Cursor cursor;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversion);
+
+        //Get the uri of each cards clicked in the MainActivity ListView.
         Intent intent = getIntent();
         currentRateUri = intent.getData();
 
+        // Check if the the above uri has a valid value
         if (currentRateUri == null) {
             setTitle("Quick Conversion");
             supportInvalidateOptionsMenu();
@@ -60,22 +64,27 @@ public class Conversion extends AppCompatActivity implements LoaderManager.Loade
             setTitle(getString(R.string.app_name));
         }
 
+        // Get references to the views in the layout
         coinEditText = (EditText) findViewById(R.id.etCoin);
         currencyEditText = (EditText) findViewById(R.id.et_currency);
         textView = (TextView) findViewById(R.id.text);
         spinnerCoins = (Spinner) findViewById(R.id.spinner_coins);
-        spinner_currencies = (Spinner) findViewById(R.id.spinner_currencies);
+        spinnerCurrencies = (Spinner) findViewById(R.id.spinner_currencies);
 
         coinSpinnerItems = getCoinSpinnerList();
         currencySpinnerItems = getCurrencySpinnerList();
         mCoinAdapter = new SpinnerAdapter(this,R.layout.spinners_list,coinSpinnerItems);
         mCurrencyAdapter = new SpinnerAdapter(this,R.layout.spinners_list,currencySpinnerItems);
         spinnerCoins.setAdapter(mCoinAdapter);
-        spinner_currencies.setAdapter(mCurrencyAdapter);
-        setUpSpinners();
+        spinnerCurrencies.setAdapter(mCurrencyAdapter);
+
+        setUpSpinnersAndEditText();
         getSupportLoaderManager().initLoader(2, null, this);
+
     }
 
+    // This query the database for some data in a background thread
+    // which are used to update UI.
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         CursorLoader data;
@@ -106,6 +115,8 @@ if(currentRateUri != null) {
         return data;
     }
 
+    // This is called after loading the data in a background thread
+    // The code to immediately update the UI also lies here.
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         String coinName;
@@ -129,64 +140,64 @@ if(currentRateUri != null) {
             }
             switch (currencyName) {
                 case "USD":
-                    spinner_currencies.setSelection(0);
+                    spinnerCurrencies.setSelection(0);
                     break;
                 case "EUR":
-                    spinner_currencies.setSelection(1);
+                    spinnerCurrencies.setSelection(1);
                     break;
                 case "JPY":
-                    spinner_currencies.setSelection(2);
+                    spinnerCurrencies.setSelection(2);
                     break;
                 case "GBP":
-                    spinner_currencies.setSelection(3);
+                    spinnerCurrencies.setSelection(3);
                     break;
                 case "CHF":
-                    spinner_currencies.setSelection(4);
+                    spinnerCurrencies.setSelection(4);
                     break;
                 case "CAD":
-                    spinner_currencies.setSelection(5);
+                    spinnerCurrencies.setSelection(5);
                     break;
                 case "AUD":
-                    spinner_currencies.setSelection(6);
+                    spinnerCurrencies.setSelection(6);
                     break;
                 case "ZAR":
-                    spinner_currencies.setSelection(7);
+                    spinnerCurrencies.setSelection(7);
                     break;
                 case "INR":
-                    spinner_currencies.setSelection(8);
+                    spinnerCurrencies.setSelection(8);
                     break;
                 case "IRR":
-                    spinner_currencies.setSelection(9);
+                    spinnerCurrencies.setSelection(9);
                     break;
                 case "HKD":
-                    spinner_currencies.setSelection(10);
+                    spinnerCurrencies.setSelection(10);
                     break;
                 case "JMD":
-                    spinner_currencies.setSelection(11);
+                    spinnerCurrencies.setSelection(11);
                     break;
                 case "KWD":
-                    spinner_currencies.setSelection(12);
+                    spinnerCurrencies.setSelection(12);
                     break;
                 case "MYR":
-                    spinner_currencies.setSelection(13);
+                    spinnerCurrencies.setSelection(13);
                     break;
                 case "NGN":
-                    spinner_currencies.setSelection(14);
+                    spinnerCurrencies.setSelection(14);
                     break;
                 case "QAR":
-                    spinner_currencies.setSelection(15);
+                    spinnerCurrencies.setSelection(15);
                     break;
                 case "RUB":
-                    spinner_currencies.setSelection(16);
+                    spinnerCurrencies.setSelection(16);
                     break;
                 case "SAR":
-                    spinner_currencies.setSelection(17);
+                    spinnerCurrencies.setSelection(17);
                     break;
                 case "KRW":
-                    spinner_currencies.setSelection(18);
+                    spinnerCurrencies.setSelection(18);
                     break;
                 case "GHS":
-                    spinner_currencies.setSelection(19);
+                    spinnerCurrencies.setSelection(19);
                     break;
             }
             exchangeString = data.getString(valueIndex);
@@ -194,12 +205,12 @@ if(currentRateUri != null) {
             valueForCurrency = parts[1];
             coinEditText.setText("1");
             currencyEditText.setText(valueForCurrency);
-            textView.setText(1 + " " + coinName + " = " + valueForCurrency + " " + currencyName);
+            textView.setText(String.format("%s %s = %s %s", "1",coinName,valueForCurrency,currencyName));
         }
         else if (data.moveToNext() && currentRateUri == null){
             valueIndex = data.getColumnIndex(CurrencyEntry.CURR_BTC_VAL);
             spinnerCoins.setSelection(0);
-            spinner_currencies.setSelection(0);
+            spinnerCurrencies.setSelection(0);
             exchangeString = data.getString(valueIndex);
             parts = exchangeString.split(" ", 2);
             valueForCurrency = parts[1];
@@ -207,7 +218,7 @@ if(currentRateUri != null) {
             currencyEditText.setText(valueForCurrency);
             coinName = "BTC";
             currencyName = "USD";
-            textView.setText(1 + " " + coinName + " = " + valueForCurrency + " " + currencyName);
+            textView.setText(String.format("%s %s = %s %s", "1",coinName,valueForCurrency,currencyName));
         }
     }
 
@@ -215,13 +226,15 @@ if(currentRateUri != null) {
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
+        // Empty method
     }
-    private void setUpSpinners() {
+    private void setUpSpinnersAndEditText() {
         loadData();
-        final  int btcValueIndex = cursor.getColumnIndex(CurrencyEntry.CURR_BTC_VAL);
-        final int forexNameIndex = cursor.getColumnIndex(CurrencyEntry.CURR_FOREX_NAME);
-        final  int ethValueIndex = cursor.getColumnIndex(CurrencyEntry.CURR_ETH_VAL);
+
+        // get the index value of the column headers in the database
+        btcValueIndex = cursor.getColumnIndex(CurrencyEntry.CURR_BTC_VAL);
+        forexNameIndex = cursor.getColumnIndex(CurrencyEntry.CURR_FOREX_NAME);
+        ethValueIndex = cursor.getColumnIndex(CurrencyEntry.CURR_ETH_VAL);
 
         spinnerCoins.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -229,10 +242,10 @@ if(currentRateUri != null) {
                 currentCoinSpinnerItem = (SpinnerItem) parent.getItemAtPosition(position);
                 coinForexName = currentCoinSpinnerItem.getShortName();
                 if (TextUtils.isEmpty(coinEditText.getText().toString())) {
-                    mFromValue = 1;
+                    fromValue = 1;
                 }
-                else  {  mFromValue =  numberParse(coinEditText.getText().toString()).doubleValue();}
-                int currencyPosition = spinner_currencies.getSelectedItemPosition();
+                else  {  fromValue =  numberParse(coinEditText.getText().toString()).doubleValue();}
+                int currencyPosition = spinnerCurrencies.getSelectedItemPosition();
                 cursor.moveToPosition(currencyPosition);
                 switch (position){
                     case 0:
@@ -247,11 +260,12 @@ if(currentRateUri != null) {
                 constantStringValue = parts[1];
                 constant = numberParse(constantStringValue).doubleValue();
 
-                convertedValue = convertToCurrency(mFromValue,constant);
-                formattedCoin = numberFormat(mFromValue);
-                formattedCurrency = numberFormat(convertedValue);
-                currencyEditText.setText(formattedCurrency);
-                textView.setText(formattedCoin + " " + coinForexName + " = " + formattedCurrency + " "  + currencyForexName);
+                convertedValue = convertToCurrency(fromValue,constant);
+                formattedCoinValue = numberFormat(fromValue);
+                formattedCurrencyValue = numberFormat(convertedValue);
+                coinEditText.setText(formattedCoinValue);
+                currencyEditText.setText(formattedCurrencyValue);
+                textView.setText(String.format("%s %s = %s %s", formattedCoinValue,coinForexName, formattedCurrencyValue,currencyForexName));
             }
 
             @Override
@@ -260,13 +274,13 @@ if(currentRateUri != null) {
             }
         });
 
-        spinner_currencies.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinnerCurrencies.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (TextUtils.isEmpty(coinEditText.getText().toString())) {
-                    mFromValue = 1;
+                    fromValue = 1;
                 }
-                else  {  mFromValue =  numberParse(coinEditText.getText().toString()).doubleValue();}
+                else  {  fromValue =  numberParse(coinEditText.getText().toString()).doubleValue();}
                 cursor.moveToPosition(position);
                 switch (spinnerCoins.getSelectedItemPosition()){
                     case 0:
@@ -279,12 +293,12 @@ if(currentRateUri != null) {
                 parts = exchangeString.split(" ",2);
                 constantStringValue = parts[1];
                 constant =numberParse(constantStringValue).doubleValue();
-                convertedValue = convertToCurrency(mFromValue,constant);
-                formattedCoin = numberFormat(mFromValue);
-                coinEditText.setText(formattedCoin);
-                formattedCurrency = numberFormat(convertedValue);
-                currencyEditText.setText(formattedCurrency);
-                textView.setText(formattedCoin + " " + coinForexName + " = " + formattedCurrency + " "  + currencyForexName);
+                convertedValue = convertToCurrency(fromValue,constant);
+                formattedCoinValue = numberFormat(fromValue);
+                coinEditText.setText(formattedCoinValue);
+                formattedCurrencyValue = numberFormat(convertedValue);
+                currencyEditText.setText(formattedCurrencyValue);
+                textView.setText(String.format("%s %s = %s %s", formattedCoinValue,coinForexName, formattedCurrencyValue,currencyForexName));
             }
 
             @Override
@@ -307,13 +321,13 @@ if(currentRateUri != null) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     coinEditText.setCursorVisible(false);
                     if (TextUtils.isEmpty(coinEditText.getText().toString())) {
-                        coinEditText.setText(formattedCoin);
-                        currencyEditText.setText(formattedCurrency);
+                        coinEditText.setText(formattedCoinValue);
+                        currencyEditText.setText(formattedCurrencyValue);
                         return false;
                     }
 
-                        mFromValue = numberParse(coinEditText.getText().toString()).doubleValue();
-                        int currencyPosition = spinner_currencies.getSelectedItemPosition();
+                        fromValue = numberParse(coinEditText.getText().toString()).doubleValue();
+                        int currencyPosition = spinnerCurrencies.getSelectedItemPosition();
                         cursor.moveToPosition(currencyPosition);
                         switch (spinnerCoins.getSelectedItemPosition()){
                             case 0:
@@ -327,12 +341,12 @@ if(currentRateUri != null) {
                         parts = exchangeString.split(" ",2);
                         constantStringValue = parts[1];
                         constant = numberParse(constantStringValue).doubleValue();
-                        convertedValue = convertToCurrency(mFromValue,constant);
-                        formattedCoin = numberFormat(mFromValue);
-                        formattedCurrency = numberFormat(convertedValue);
-                        coinEditText.setText(formattedCoin);
-                        currencyEditText.setText(formattedCurrency);
-                        textView.setText(formattedCoin + " " + coinForexName + " = " + formattedCurrency + " "  + currencyForexName);
+                        convertedValue = convertToCurrency(fromValue,constant);
+                        formattedCoinValue = numberFormat(fromValue);
+                        formattedCurrencyValue = numberFormat(convertedValue);
+                        coinEditText.setText(formattedCoinValue);
+                        currencyEditText.setText(formattedCurrencyValue);
+                        textView.setText(String.format("%s %s = %s %s", formattedCoinValue,coinForexName, formattedCurrencyValue,currencyForexName));
                 }
                 return false;
             }
@@ -352,12 +366,12 @@ if(currentRateUri != null) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     currencyEditText.setCursorVisible(false);
                     if (TextUtils.isEmpty(currencyEditText.getText().toString())) {
-                        coinEditText.setText(formattedCoin);
-                        currencyEditText.setText(formattedCurrency);
+                        coinEditText.setText(formattedCoinValue);
+                        currencyEditText.setText(formattedCurrencyValue);
                         return false;
                     }
-                        mFromValue = numberParse(currencyEditText.getText().toString()).doubleValue();
-                        cursor.moveToPosition(spinner_currencies.getSelectedItemPosition());
+                        fromValue = numberParse(currencyEditText.getText().toString()).doubleValue();
+                        cursor.moveToPosition(spinnerCurrencies.getSelectedItemPosition());
                         switch (spinnerCoins.getSelectedItemPosition()){
                             case 0:
                                 exchangeString = cursor.getString(btcValueIndex);
@@ -369,12 +383,12 @@ if(currentRateUri != null) {
                         parts = exchangeString.split(" ",2);
                         constantStringValue = parts[1];
                         constant =numberParse(constantStringValue).doubleValue();
-                        convertedValue = convertToCoin(mFromValue,constant);
-                        formattedCoin = numberFormat(convertedValue);
-                        formattedCurrency = numberFormat(mFromValue);
-                        coinEditText.setText(formattedCoin);
-                        currencyEditText.setText(formattedCurrency);
-                        textView.setText(formattedCoin + " " + coinForexName + " = " + formattedCurrency + " "  + currencyForexName);
+                        convertedValue = convertToCoin(fromValue,constant);
+                        formattedCoinValue = numberFormat(convertedValue);
+                        formattedCurrencyValue = numberFormat(fromValue);
+                        coinEditText.setText(formattedCoinValue);
+                        currencyEditText.setText(formattedCurrencyValue);
+                        textView.setText(String.format("%s %s = %s %s", formattedCoinValue,coinForexName, formattedCurrencyValue,currencyForexName));
                 }
                 return false;
             }
@@ -403,6 +417,8 @@ if(currentRateUri != null) {
         return fromValue/constant;
     }
 
+    // coverts double into a String using the NumberFormat method
+    // and the user's default Locale
     private String numberFormat (double number) {
         NumberFormat numberformat = NumberFormat.getInstance(Locale.getDefault());
         numberformat.setMaximumFractionDigits(4);
@@ -494,6 +510,7 @@ if(currentRateUri != null) {
         return spinnerItems;
     }
 
+    //close cursor after reading from it to free memory
     private void closeCursor(){
         if (cursor!= null ) {
             cursor.close();

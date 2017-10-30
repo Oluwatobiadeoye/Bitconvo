@@ -18,8 +18,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -40,40 +38,15 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
         private static final  String CRYPTO_REQUEST_URL = "https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETH&" +
                 "tsyms=USD,EUR,JPY,GBP,CHF,CAD,AUD,ZAR,INR,IRR,HKD,JMD,KWD,MYR,NGN,QAR,RUB,SAR,KRW,GHS";
-        private static String LOG_TAG = MainActivity.class.getSimpleName();
+        private String btcCurrencyValue,ethCurrencyValue,btcPer,ethPer,forexName,coinforexName,currencyForexName,fullName,currentCurrencyName;
+        private String[] partNames,projection1,projection2;
+        private SwipeRefreshLayout swipeRefreshLayout;
         private List<String> currencyNames;
         private RateCursorAdapter mAdapter;
         private FloatingActionButton fab;
-        private SwipeRefreshLayout swipeRefreshLayout;
-        private String btcCurrencyValue,ethCurrencyValue,btcPer,ethPer,forexName,coinforexName,currencyForexName,fullName,currentCurrencyName;
-        private String[] partNames,projection1,projection2;
         private Uri currentRateUri;
         private long currentRateId;
         private View emptyView;
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.refresh_rate:
-                 swipeRefreshLayout.setRefreshing(true);
-                 updateData();
-                return true;
-            case R.id.delete_all:
-                showDialog();
-                return true;
-            case R.id.convert:
-                Intent intent = new Intent(MainActivity.this, Conversion.class);
-                startActivity(intent);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main,menu);
-        return true;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MainActivity.this,Conversion.class);
+                Intent intent = new Intent(MainActivity.this,ConversionActivity.class);
                 currentRateUri = ContentUris.withAppendedId(WatchlistEntry.CONTENT_URI,id);
                 intent.setData(currentRateUri);
                 startActivity(intent);
@@ -119,14 +92,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent (MainActivity.this,ToAddCard.class);
+                Intent intent = new Intent (MainActivity.this,AddCardActivity.class);
                 startActivity(intent);
             }
         });
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent (MainActivity.this,ToAddCard.class);
+                Intent intent = new Intent (MainActivity.this,AddCardActivity.class);
                 startActivity(intent);
             }
         });
@@ -165,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                                 partNames = currentCurrencyName.split(" ",2);
                                 currencyForexName = partNames[0];
                                 fullName = partNames[1];
+
                                 JSONObject btcObject = display.getJSONObject("BTC");
                                 JSONObject ethObject = display.getJSONObject("ETH");
                                 JSONObject btcCurrencyObject = btcObject.getJSONObject(currencyForexName);
@@ -173,12 +147,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                                 JSONObject ethCurrencyObject = ethObject.getJSONObject(currencyForexName);
                                 ethCurrencyValue = ethCurrencyObject.getString("PRICE");
                                 ethPer = ethCurrencyObject.getString("CHANGEPCT24HOUR");
+
                                 values.put(CurrencyEntry.CURR_FOREX_NAME,currencyForexName);
                                 values.put(CurrencyEntry.CURR_FULL_NAME,fullName);
                                 values.put(CurrencyEntry.CURR_BTC_VAL,btcCurrencyValue);
                                 values.put(CurrencyEntry.CURR_BTC_PER,btcPer);
                                 values.put(CurrencyEntry.CURR_ETH_VAL,ethCurrencyValue);
                                 values.put(CurrencyEntry.CURR_ETH_PER,ethPer);
+
                                 getContentResolver().insert(CurrencyEntry.CONTENT_URI,values);
                             }
                             fab.setVisibility(View.VISIBLE);
@@ -196,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 if (emptyView !=null) {
                     emptyView.setVisibility(View.GONE);
                 }
-                    Intent intent = new Intent(MainActivity.this, NetworkProblem.class);
+                    Intent intent = new Intent(MainActivity.this, NetworkProblemActivity.class);
                     startActivity(intent);
                     finish();
             }
@@ -227,6 +203,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         currencyNames.add("KRW South Korea Won");
         currencyNames.add("GHS Ghanian Cedi");
     }
+
+    // Check if the application is running for the first time
+    // if yes, insert data into the database else update the data in the database.
     public  void checkFirstRun() {
         boolean isFirstRun = getSharedPreferences("PREFERENCE",MODE_PRIVATE).getBoolean("isFirstRun",true);
         if (isFirstRun) {
@@ -267,16 +246,40 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         getContentResolver().delete(WatchlistEntry.CONTENT_URI,null,null);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.refresh_rate:
+                swipeRefreshLayout.setRefreshing(true);
+                updateData();
+                return true;
+            case R.id.delete_all:
+                showDialog();
+                return true;
+            case R.id.convert:
+                Intent intent = new Intent(MainActivity.this, ConversionActivity.class);
+                startActivity(intent);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main,menu);
+        return true;
+    }
+
     private void showDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Confirm remove?")
-                .setPositiveButton("Remove", new DialogInterface.OnClickListener() {
+        builder.setMessage(getString(R.string.alert_messageII))
+                .setPositiveButton(getString(R.string.remove), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         deleteAll();
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.remove), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -298,34 +301,38 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                             JSONObject display = response.getJSONObject("DISPLAY");
                             ContentValues values = new ContentValues();
                             for (int i =0; i < currencyNames.size(); i++) {
-                                String btc = "BTC";
-                                String eth = "ETH";
                                 currentCurrencyName = currencyNames.get(i);
                                 partNames = currentCurrencyName.split(" ",2);
                                 currencyForexName = partNames[0];
-                                JSONObject btcObject = display.getJSONObject(btc);
-                                JSONObject ethObject = display.getJSONObject(eth);
+
+                                JSONObject btcObject = display.getJSONObject("BTC");
+                                JSONObject ethObject = display.getJSONObject("ETH");
                                 JSONObject btcCurrencyObject = btcObject.getJSONObject(currencyForexName);
                                 btcCurrencyValue = btcCurrencyObject.getString("PRICE");
                                 btcPer = btcCurrencyObject.getString("CHANGEPCT24HOUR");
                                 JSONObject ethCurrencyObject = ethObject.getJSONObject(currencyForexName);
                                 ethCurrencyValue = ethCurrencyObject.getString("PRICE");
                                 ethPer = ethCurrencyObject.getString("CHANGEPCT24HOUR");
+
                                 values.put(CurrencyEntry.CURR_BTC_VAL,btcCurrencyValue);
                                 values.put(CurrencyEntry.CURR_BTC_PER,btcPer);
                                 values.put(CurrencyEntry.CURR_ETH_VAL,ethCurrencyValue);
                                 values.put(CurrencyEntry.CURR_ETH_PER,ethPer);
+
                                 currentRateId = i + 1;
                                 currentRateUri = ContentUris.withAppendedId(CurrencyEntry.CONTENT_URI,currentRateId);
                                 getContentResolver().update(currentRateUri,values,null,null);
                             }
+
                             String updatedValue,updatedPercentage;
                             long watchlistCurrentId;
+
                             ContentValues valuesWatch = new ContentValues();
                             projection2 = new String[]{
                                     WatchlistEntry._ID,
                                     WatchlistEntry.RATE_FOREX_NAME,
                             };
+
                             Cursor cursor = getContentResolver().query(WatchlistEntry.CONTENT_URI,projection2,null,null,null);
                             int forexNameIndex = cursor.getColumnIndex(WatchlistEntry.RATE_FOREX_NAME);
                             int _IdIndex = cursor.getColumnIndex(WatchlistEntry.WATCH_ID);
@@ -336,10 +343,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                                 partNames = forexName.split(" / ", 2);
                                 coinforexName = partNames[0];
                                 currencyForexName = partNames[1];
+
                                 JSONObject coinObject = display.getJSONObject(coinforexName);
                                 JSONObject currencyObject = coinObject.getJSONObject(currencyForexName);
                                 updatedValue = currencyObject.getString("PRICE");
                                 updatedPercentage = currencyObject.getString("CHANGEPCT24HOUR");
+
                                 valuesWatch.put(WatchlistEntry.VALUE,updatedValue);
                                 valuesWatch.put(WatchlistEntry.PERCENTAGE,updatedPercentage);
                                 getContentResolver().update(currentRateUri,valuesWatch,null,null);

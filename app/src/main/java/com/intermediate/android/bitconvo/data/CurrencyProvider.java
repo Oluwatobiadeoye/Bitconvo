@@ -14,9 +14,9 @@ import android.util.Log;
 
 /**
  * Created by adeoye oluwatobi on 10/13/2017.
+ * Handles the whole CRUD operation on the two database created
  */
 public class CurrencyProvider extends ContentProvider {
-    private static String LOG_TAG = CurrencyProvider.class.getSimpleName();
     private static  final int CURRENCIES = 100;
     private static final int CURRENCY_ID = 101;
     private static final int WATCHLIST = 200;
@@ -38,6 +38,8 @@ public class CurrencyProvider extends ContentProvider {
         return true;
     }
 
+    // queries the database for data
+    // returns  a cursor which points to the data in the database.
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
@@ -84,6 +86,8 @@ public class CurrencyProvider extends ContentProvider {
 
     }
 
+    // insert data to the database
+    // returns the uri of the inserted row
     @Nullable
     @Override
     public Uri insert(Uri uri, ContentValues values) {
@@ -97,6 +101,8 @@ public class CurrencyProvider extends ContentProvider {
         }
     }
 
+    // deletes data from the database
+    // returns the number of rows deleted in the database
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         SQLiteDatabase database = mCurrencyDbHelper.getWritableDatabase();
@@ -125,6 +131,8 @@ public class CurrencyProvider extends ContentProvider {
         return rowsDeleted ;
     }
 
+    // updates the already present data in the database
+    // returns the number of rows updated in the database
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         int match = sUriMatcher.match(uri);
@@ -144,16 +152,17 @@ public class CurrencyProvider extends ContentProvider {
         }
     }
 
+    // Exact method which inserts to the database
     public Uri insertCurrency(Uri uri, ContentValues values) {
         determineTableName(uri);
         String btcPer = values.getAsString(CurrencyEntry.CURR_BTC_PER);
         if (btcPer == null) {
-            btcPer = "%";
+           values.put(CurrencyEntry.CURR_BTC_PER,"%");
         }
 
         String ethPer = values.getAsString(CurrencyEntry.CURR_ETH_PER);
         if (ethPer == null) {
-            ethPer = "%";
+            values.put(CurrencyEntry.CURR_ETH_PER,"%");
         }
         SQLiteDatabase database = mCurrencyDbHelper.getWritableDatabase();
         long id = database.insert(TABlENAME,null,values);
@@ -163,23 +172,26 @@ public class CurrencyProvider extends ContentProvider {
         getContext().getContentResolver().notifyChange(uri,null);
         return ContentUris.withAppendedId(uri,id);
      }
-
+    // Exact method which updates the database
     public int updateCurrency(Uri uri,ContentValues values,String selection, String[] selectionArgs) {
         determineTableName(uri);
         String btcPer = values.getAsString(CurrencyEntry.CURR_BTC_PER);
         if (btcPer == null) {
-            btcPer = "%";
+            values.put(CurrencyEntry.CURR_BTC_PER,"%");
         }
 
         String ethPer = values.getAsString(CurrencyEntry.CURR_ETH_PER);
         if (ethPer == null) {
-           ethPer = "%";
+            values.put(CurrencyEntry.CURR_ETH_PER,"%");
         }
         SQLiteDatabase database = mCurrencyDbHelper.getWritableDatabase();
         int rowsUpdated = database.update(TABlENAME,values,selection,selectionArgs);
         getContext().getContentResolver().notifyChange(uri,null);
         return rowsUpdated;
     }
+
+    // determine the name of the table on which to perform any of the CRUD operation using
+    // the passed uri.
      private void determineTableName(Uri uri) {
          int match = sUriMatcher.match(uri);
          if (match == CURRENCIES || match == CURRENCY_ID) {

@@ -27,7 +27,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".ToAddCard"
+            android:name=".AddCardActivity"
             android:label="Add to Watchlist"
             android:parentActivityName=".MainActivity">
             <meta-data
@@ -35,13 +35,13 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".Conversion"
+            android:name=".ConversionActivity"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".NetworkProblem" />
+        <activity android:name=".NetworkProblemActivity" />
     </application>
 
 </manifest>

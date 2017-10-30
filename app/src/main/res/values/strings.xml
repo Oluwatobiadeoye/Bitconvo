@@ -3,4 +3,12 @@
     <string name="alert_message">Remove current pair from watchlist?</string>
     <string name="remove">Remove</string>
     <string name="cancel">Cancel</string>
+    <string name="alert_messageII">Confirm remove?</string>
+    <string name="no_internet">No Internet Connection</string>
+    <string name="retry">Retry</string>
+    <string name="settings">Go to Settings</string>
+    <string name="content_image">Error Image</string>
+    <string name="add">Add</string>
+    <string name="base">BASE CURRENCY:</string>
+    <string name="quote">QUOTE CURRENCY:</string>
 </resources>

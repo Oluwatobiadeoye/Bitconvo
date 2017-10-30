@@ -3,8 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NetworkProblem">
+    tools:context=".NetworkProblemActivity">
     <ImageView
+        android:contentDescription="@string/content_image"
         android:id="@+id/icon"
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -18,7 +19,7 @@
         android:layout_below="@id/icon"
         android:textAppearance="?android:textAppearanceMedium"
         android:fontFamily="sans-serif-medium"
-        android:text="No Internet Connection"
+        android:text="@string/no_internet"
         android:textColor="#AEB6BD"
         />
     <LinearLayout
@@ -32,7 +33,7 @@
         android:id="@+id/retry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Retry"
+        android:text="@string/retry"
         android:textColor="@color/colorPrimary"
         android:fontFamily="sans-serif-medium"
         android:textSize="18sp"
@@ -45,7 +46,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textSize="18sp"
-        android:text="Go to Settings"
+        android:text="@string/settings"
         android:layout_marginBottom="15dp"
         />
     </LinearLayout>

@@ -14,6 +14,7 @@ import java.util.List;
 
 /**
  * Created by adeoye oluwatobi on 10/22/2017.
+ * Custom adapter that supplies data to a Spinner object
  */
 public class SpinnerAdapter extends ArrayAdapter<SpinnerItem> {
 

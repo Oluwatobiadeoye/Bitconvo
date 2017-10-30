@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.intermediate.android.bitconvo.ToAddCard">
+    tools:context=".AddCardActivity">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,24 +15,27 @@
         <TextView
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:paddingLeft="2dp"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
             android:textColor="#000"
             android:textAppearance="?android:textAppearanceSmall"
-            android:text="BASE CURRENCY:"
+            android:text="@string/base"
             />
         <TextView
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:paddingLeft="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
             android:textColor="#000"
             android:textAppearance="?android:textAppearanceSmall"
-            android:text="QUOTE CURRENCY:"/>
+            android:text="@string/quote"/>
     </LinearLayout>
     <LinearLayout
+        android:baselineAligned="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
@@ -58,7 +61,7 @@
             android:id="@+id/spin2"
             android:background="@drawable/background"
             android:layout_gravity="end"
-            android:layout_marginLeft="10dp">
+            android:layout_marginStart="10dp">
             <Spinner
                 android:dropDownWidth="200dp"
                 android:layout_width="match_parent"

@@ -21,14 +21,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:src="@drawable/bitcoin"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:layout_gravity="center_vertical"
            />
         <LinearLayout
+            android:baselineAligned="false"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:layout_marginLeft="38dp"
+            android:layout_marginStart="38dp"
             android:padding="5dp"
             android:layout_gravity="center_vertical"
            >
@@ -73,7 +74,8 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     tools:text="$4,000"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
+                    android:paddingStart="5dp"
                     android:paddingBottom="3dp"
                     android:gravity="bottom"
                     android:fontFamily="sans-serif-medium"

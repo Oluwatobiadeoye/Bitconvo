@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-public class NetworkProblem extends AppCompatActivity {
+public class NetworkProblemActivity extends AppCompatActivity {
 
     private TextView retry, settings;
 
@@ -24,7 +24,7 @@ public class NetworkProblem extends AppCompatActivity {
         retry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(NetworkProblem.this,MainActivity.class);
+                Intent intent = new Intent(NetworkProblemActivity.this,MainActivity.class);
                 startActivity(intent);
                 finish();
             }

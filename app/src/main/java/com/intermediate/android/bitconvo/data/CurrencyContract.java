@@ -7,6 +7,7 @@ import android.provider.BaseColumns;
 
 /**
  * Created by adeoye oluwatobi on 10/13/2017.
+ * This class @Link CurrencyContract defines the schema for the two database used in the app
  */
 public class CurrencyContract {
 
@@ -16,7 +17,7 @@ public class CurrencyContract {
 
     private CurrencyContract() {
     }
-
+    //  Exact schema for the "currencies" database
     public static class CurrencyEntry implements BaseColumns {
         public static final String CURR_ID =BaseColumns._ID;
         public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
@@ -31,6 +32,8 @@ public class CurrencyContract {
         public static final String CONTENT_LIST_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE +"/"+ CONTENT_AUTHORITY+"/" +PATH_CURRENCY;
         public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/"+CONTENT_AUTHORITY+"/"+PATH_CURRENCY;
     }
+
+    //Exact schema for the "watchList" database
     public  static class WatchlistEntry implements BaseColumns{
         public static final String WATCH_ID = BaseColumns._ID;
         public static final Uri BASE_CONTENT_URI = Uri.parse("content://"+ CONTENT_AUTHORITY);

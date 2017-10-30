@@ -15,6 +15,7 @@ import com.intermediate.android.bitconvo.data.CurrencyContract.*;
 
 /**
  * Created by adeoye oluwatobi on 10/16/2017.
+ * Cursor adapter which loads data into a ListView
  */
 public class RateCursorAdapter extends CursorAdapter {
 
@@ -23,7 +24,7 @@ public class RateCursorAdapter extends CursorAdapter {
     }
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return LayoutInflater.from(context).inflate(R.layout.rate_single_list,parent,false);
+        return LayoutInflater.from(context).inflate(R.layout.list_item,parent,false);
     }
 
     @Override
@@ -47,11 +48,11 @@ public class RateCursorAdapter extends CursorAdapter {
         int textColor;
         if (!percentage.equals("%")) {
             if (percentage.contains("-")){
-                percentView.setText(percentage+"%");
+                percentView.setText(String.format("%s%",percentage));
                 textColor = ContextCompat.getColor(context,R.color.negative_value);
                 percentView.setTextColor(textColor);
             } else {
-                percentView.setText("+"+percentage+"%");
+                percentView.setText(String.format("+%s%",percentage));
                 textColor = ContextCompat.getColor(context,R.color.positive_value);
                 percentView.setTextColor(textColor);
             }
