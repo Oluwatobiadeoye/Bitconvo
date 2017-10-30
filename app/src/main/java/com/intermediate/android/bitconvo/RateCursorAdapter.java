@@ -52,7 +52,7 @@ public class RateCursorAdapter extends CursorAdapter {
                 textColor = ContextCompat.getColor(context,R.color.negative_value);
                 percentView.setTextColor(textColor);
             } else {
-                percentView.setText(String.format("+%s%",percentage));
+                percentView.setText(String.format("+%s%", percentage));
                 textColor = ContextCompat.getColor(context,R.color.positive_value);
                 percentView.setTextColor(textColor);
             }
