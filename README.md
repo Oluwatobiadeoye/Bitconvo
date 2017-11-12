@@ -1,7 +1,7 @@
 # Bitconvo
 
-Bitconvo is  an app that help displays the latest exchange rate between cryptocurrency (Bitcoin and Ethereum) and any of the 20 major world currency including Naira.
-Also, it allows for conversion between the crytocurrency and the world currency.
+Bitconvo is  an app that help displays the latest exchange rate between cryptocurrencies (Bitcoin and Ethereum) and any of the 20 major world currency including Naira.
+Also, it allows for conversion between the crytocurrencies and the world currencies.
 
 Latest exchange rates were got by querying the <a href="https://developer.android.com/training/volley/index.html">Crytocompare</a> API.
 Heavy network request to the server was done using the Android <a href="https://developer.android.com/training/volley/index.html">Volley</a> library.
