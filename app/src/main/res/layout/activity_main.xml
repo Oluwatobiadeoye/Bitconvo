@@ -28,7 +28,7 @@
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No exchange rates"
+            android:text="@string/no_exchange"
             android:textColor="@android:color/black"
             android:textStyle="bold"/>
         <LinearLayout
@@ -40,24 +40,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:text="Tap"/>
+            android:text="@string/tap"/>
         <ImageView
+            android:visibility="gone"
             android:id="@+id/plus_sign"
             android:layout_marginTop="11dp"
-            android:layout_marginLeft="5dp"
-            android:layout_centerVertical="true"
+            android:layout_marginStart="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_add"
             android:background="@drawable/add_background"/>
         <TextView
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:id="@+id/add"
-            android:layout_toRightOf="@id/plus_sign"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:text="to add an exchange rate"/>
+            android:text="@string/to_add"/>
         </LinearLayout>
     </LinearLayout>
     <android.support.design.widget.FloatingActionButton
@@ -67,7 +66,7 @@
         android:src="@drawable/ic_add"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
         />
 </RelativeLayout>

@@ -11,4 +11,7 @@
     <string name="add">Add</string>
     <string name="base">BASE CURRENCY:</string>
     <string name="quote">QUOTE CURRENCY:</string>
+    <string name="no_exchange">No exchange rates</string>
+    <string name="tap">Tap</string>
+    <string name="to_add">to add an exchange rate</string>
 </resources>

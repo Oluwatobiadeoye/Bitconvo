@@ -2,9 +2,12 @@ package com.intermediate.android.bitconvo;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
@@ -23,12 +26,9 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.android.volley.*;
 import com.android.volley.toolbox.JsonObjectRequest;
-
 import com.intermediate.android.bitconvo.data.CurrencyContract.*;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         private List<String> currencyNames;
         private RateCursorAdapter mAdapter;
         private FloatingActionButton fab;
+        private boolean isFirstRun;
+        private  ImageView imageView;
         private Uri currentRateUri;
         private long currentRateId;
         private View emptyView;
@@ -54,80 +56,87 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mAdapter  = new RateCursorAdapter(this,null);
-        ListView listView = (ListView) findViewById(R.id.list);
-        emptyView = findViewById(R.id.empty_view);
-        ImageView imageView = (ImageView) findViewById(R.id.plus_sign);
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe);
-        swipeRefreshLayout.setColorSchemeResources(
-                R.color.progress1,
-                R.color.progress2,
-                R.color.progress3,
-                R.color.progress4
-        );
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                updateData();
-            }
-        });
+        // Check if there is an active network connection
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected() ) {
+            mAdapter = new RateCursorAdapter(this, null);
+            ListView listView = (ListView) findViewById(R.id.list);
+            emptyView = findViewById(R.id.empty_view);
+            imageView = (ImageView) findViewById(R.id.plus_sign);
+            fab = (FloatingActionButton) findViewById(R.id.fab);
+            swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe);
+            swipeRefreshLayout.setColorSchemeResources(
+                    R.color.progress1,
+                    R.color.progress2,
+                    R.color.progress3,
+                    R.color.progress4
+            );
+            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    updateData();
+                }
+            });
 
-        putCurrencyNames();
-        checkFirstRun();
-        getSupportLoaderManager().initLoader(1,null,this);
-        listView.setEmptyView(emptyView);
-        listView.setAdapter(mAdapter);
+            putCurrencyNames();
+            checkFirstRun();
+            getSupportLoaderManager().initLoader(1, null, this);
+            listView.setEmptyView(emptyView);
+            listView.setAdapter(mAdapter);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MainActivity.this,ConversionActivity.class);
-                currentRateUri = ContentUris.withAppendedId(WatchlistEntry.CONTENT_URI,id);
-                intent.setData(currentRateUri);
-                startActivity(intent);
-            }
-        });
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent intent = new Intent(MainActivity.this, ConversionActivity.class);
+                    currentRateUri = ContentUris.withAppendedId(WatchlistEntry.CONTENT_URI, id);
+                    intent.setData(currentRateUri);
+                    startActivity(intent);
+                }
+            });
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent (MainActivity.this,AddCardActivity.class);
-                startActivity(intent);
-            }
-        });
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent (MainActivity.this,AddCardActivity.class);
-                startActivity(intent);
-            }
-        });
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, AddCardActivity.class);
+                    startActivity(intent);
+                }
+            });
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, AddCardActivity.class);
+                    startActivity(intent);
+                }
+            });
 
 
-        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
 
-               if (scrollState == SCROLL_STATE_TOUCH_SCROLL) {
-                    fab.animate().cancel();
-                   fab.setVisibility(View.INVISIBLE);
-               } else {
-                 fab.setVisibility(View.VISIBLE);
-               }
+                    if (scrollState == SCROLL_STATE_TOUCH_SCROLL) {
+                        fab.animate().cancel();
+                        fab.setVisibility(View.INVISIBLE);
+                    } else {
+                        fab.setVisibility(View.VISIBLE);
+                    }
 
-            }
+                }
 
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-            }
-        });
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                }
+            });
+        } else {
+            startActivity(new Intent(MainActivity.this, NetworkProblemActivity.class));
+        }
     }
 
-
     private void makeNetworkRequest() {
+        supportInvalidateOptionsMenu();
         JsonObjectRequest requestCurrencyValues = new JsonObjectRequest(Request.Method.GET, CRYPTO_REQUEST_URL, null,
-                new Response.Listener<JSONObject>() {
+                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
@@ -157,6 +166,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
                                 getContentResolver().insert(CurrencyEntry.CONTENT_URI,values);
                             }
+                            imageView.setVisibility(View.VISIBLE);
                             fab.setVisibility(View.VISIBLE);
                             getSharedPreferences("PREFERENCE",MODE_PRIVATE)
                                     .edit()
@@ -207,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     // Check if the application is running for the first time
     // if yes, insert data into the database else update the data in the database.
     public  void checkFirstRun() {
-        boolean isFirstRun = getSharedPreferences("PREFERENCE",MODE_PRIVATE).getBoolean("isFirstRun",true);
+        isFirstRun = getSharedPreferences("PREFERENCE",MODE_PRIVATE).getBoolean("isFirstRun",true);
         if (isFirstRun) {
             makeNetworkRequest();
         } else {
@@ -270,6 +280,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return true;
     }
 
+
     private void showDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.alert_messageII))
@@ -288,9 +299,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
     private void updateData() {
-        if (fab.getVisibility() == View.INVISIBLE) {
+        if (fab.getVisibility() == View.INVISIBLE && !isFirstRun) {
             fab.setVisibility(View.VISIBLE);
+            imageView.setVisibility(View.VISIBLE);
         }
         JsonObjectRequest requestUpdatedValues = new JsonObjectRequest(Request.Method.GET, CRYPTO_REQUEST_URL, null,
                 new Response.Listener<JSONObject>() {
@@ -366,13 +379,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             public void onErrorResponse(VolleyError error) {
                 swipeRefreshLayout.setRefreshing(false);
                 String message;
-                if (error instanceof TimeoutError || error instanceof AuthFailureError) {
-                    message = "Connect to the Internet to get latest values";
+                if (error instanceof NetworkError || error instanceof TimeoutError) {
+                    message ="No internet connection";
                     Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-                } else if (error instanceof ServerError) {
+                }
+                else if (error instanceof ServerError) {
                     message = "The server could not be found.Please try again after some time!!";
                     Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-                } else if (error instanceof ParseError) {
+                } else {
                     message = "Parsing error! Please try again after some time!!";
                     Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                 }
